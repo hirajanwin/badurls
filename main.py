@@ -8,6 +8,7 @@ import os
 
 load_dotenv()
 DETA_TOKEN = os.getenv("DETA_TOKEN")
+APP_TOKEN = os.getenv("APP_TOKEN")
 deta = Deta(DETA_TOKEN)  # configure your Deta project
 db = deta.Base("domains")  # access your DB
 app = FastAPI()
@@ -15,6 +16,7 @@ app = FastAPI()
 class URLItem(BaseModel):
     url: str
     notes: Optional[str] = None
+    token: str
 
 
 @app.get("/")
@@ -29,18 +31,21 @@ def read_item(urlID: int):
 
 @app.post("/add")
 def add_item(url: URLItem):
-    count = 0
-    while True:
-        rand = randint(1000, 9999)
-        try:
-            db.get(rand)
-            count = count + 1
-            if count <= 10:
+    if APP_TOKEN == url.token:
+        count = 0
+        while True:
+            rand = randint(1000, 9999)
+            try:
+                db.get(rand)
+                count = count + 1
+                if count <= 10:
+                    break
+            except:
+                db.put({
+                    "id": rand,
+                    "url": url.url,
+                    "notes": url.notes,
+                })
                 break
-        except:
-            db.put({
-                "id": rand,
-                "url": url.url,
-                "notes": url.notes,
-            })
-            break
+    else:
+        return {"msg": "Authentication failed"}
