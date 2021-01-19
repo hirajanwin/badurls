@@ -22,7 +22,7 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/url/{item_id}")
+@app.get("/url/{urlID}")
 def read_item(urlID: int):
     return deta.get(urlID)
 
