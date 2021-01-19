@@ -6,6 +6,7 @@ from random import randint
 from dotenv import load_dotenv
 import os
 
+
 # Setup
 
 load_dotenv()
@@ -14,6 +15,7 @@ APP_TOKEN = os.getenv("APP_TOKEN")
 deta = Deta(DETA_TOKEN)  # configure your Deta project
 db = deta.Base("domains")  # access your DB
 app = FastAPI()
+
 
 class URLItem(BaseModel):
     url: str
