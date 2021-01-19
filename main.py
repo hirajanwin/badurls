@@ -53,7 +53,8 @@ def add_item(url: URLItem):
         db.insert({
             "id": rand,
             "url": url.url,
-            "notes": url.notes
+            "notes": url.notes,
+            "show": False
         })
         return {"msg": "Success!",
                 "data": {
