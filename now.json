@@ -1,17 +1,15 @@
-// vercel.json
-
 {
     "version": 2,
     "builds": [
         {
-            "src": "app.py",
+            "src": "main.py",
             "use": "@now/python"
         }
     ],
     "routes": [
         {
             "src": "(.*)",
-            "dest": "app.py"
+            "dest": "main.py"
         }
     ]
 }
