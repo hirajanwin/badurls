@@ -26,7 +26,7 @@ def read_root():
 
 @app.get("/url/{urlID}")
 def read_item(urlID: int):
-    return deta.get(urlID)
+    return db.get(urlID)
 
 
 @app.post("/add")
