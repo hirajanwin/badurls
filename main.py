@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -24,6 +25,7 @@ sentry_sdk.init(
 load_dotenv()
 DETA_TOKEN = os.getenv("DETA_TOKEN")
 APP_TOKEN = os.getenv("APP_TOKEN")
+APP_USER = os.getenv("APP_USER")
 deta = Deta(DETA_TOKEN)  # configure your Deta project
 db = deta.Base("domains")  # access your DB
 app = FastAPI()
@@ -31,15 +33,23 @@ limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, APP_USER)
+    correct_password = secrets.compare_digest(credentials.password, APP_TOKEN)
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
 
 class URLItem(BaseModel):
     url: str
     notes: Optional[str] = None
-    token: str
     
 class DELURLItem(BaseModel):
     url: str
-    token: str
 
 
 @app.get("/")
@@ -73,7 +83,7 @@ def read_all(request: Request, hidden: Optional[bool] = False):
 
 @app.post("/add")
 @limiter.limit("10/minute")
-def add_item(url: URLItem, request: Request):
+def add_item(url: URLItem, request: Request, username: str = Depends(get_current_username)):
     if APP_TOKEN == url.token:
         rand = randint(10000, 99999)
         today = str(date.today())
@@ -96,7 +106,7 @@ def add_item(url: URLItem, request: Request):
 
 @app.delete("/delete")
 @limiter.limit("5/minute")
-def delete_item(url: DELURLItem, request: Request):
+def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_current_username)):
     try:
         if APP_TOKEN == url.token:
             dburl = next(db.fetch({"url": url.url}))[0]
