@@ -34,6 +34,23 @@ limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+@app.middleware("http")
+async def sentry_exception(request: Request, call_next):
+    # Credit: https://philstories.medium.com/integrate-sentry-to-fastapi-7250603c070f
+    try:
+        response = await call_next(request)
+        return response
+    except Exception as e:
+        with sentry_sdk.push_scope() as scope:
+            scope.set_context("request", request)
+            user_id = "database_user_id" # when available
+            scope.user = {
+                "ip_address": request.client.host,
+                "id": user_id
+            }
+            sentry_sdk.capture_exception(e)
+        raise e
+
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, APP_USER)
     correct_password = secrets.compare_digest(credentials.password, APP_TOKEN)
