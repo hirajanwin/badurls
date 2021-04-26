@@ -29,6 +29,7 @@ APP_USER = os.getenv("APP_USER")
 deta = Deta(DETA_TOKEN)  # configure your Deta project
 db = deta.Base("domains")  # access your DB
 app = FastAPI()
+security = HTTPBasic()
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
