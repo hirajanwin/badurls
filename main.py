@@ -114,9 +114,9 @@ def add_item(url: URLItem, request: Request, username: str = Depends(get_current
     return {"msg": "Success!",
             "user": username,
             "data": {
-			"id": rand,
-			"url": url.url,
-			"notes": url.notes}
+		    "id": rand,
+		    "url": url.url,
+		    "notes": url.notes}
            }
     
 
@@ -125,10 +125,10 @@ def add_item(url: URLItem, request: Request, username: str = Depends(get_current
 def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_current_username)):
     try:
         dburl = next(db.fetch({"url": url.url}))[0]
-		db.delete(dburl["key"])
-		return {"msg": "Success!",
-                "username": username,
-                "deleted_url": url.url,
-                "deleted_key": dburl["key"]}
+        db.delete(dburl["key"])
+	return {"msg": "Success!",
+		"username": username,
+		"deleted_url": url.url,
+		"deleted_key": dburl["key"]}
     except Exception as exception:
         return {"error": execption}
