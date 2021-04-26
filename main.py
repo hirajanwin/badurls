@@ -87,12 +87,15 @@ def add_item(url: URLItem, request: Request):
 @app.delete("/delete")
 @limiter.limit("5/minute")
 def delete_item(url: str, token: str, request: Request):
+    
+    # CHANGE BACK TO ORIGINAL ERROR HANDLER AFTER DEBUGGING (TRY/EXCEPT)
+    
     if APP_TOKEN == token:
-        dburl = next(domains.fetch({"url": url}))[0]
-        domains.delete(dburl["key"])
+        dburl = next(db.fetch({"url": url}))[0]
+        db.delete(dburl["key"])
         return {"msg": "Success!",
-                    "deleted_url": url,
-                    "deleted_key": dburl["key"]}
+                "deleted_url": url,
+                "deleted_key": dburl["key"]}
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
         
