@@ -9,6 +9,7 @@ from random import randint
 from dotenv import load_dotenv
 import os
 import sentry_sdk
+from datetime import date
 
 
 # Load Sentry
@@ -35,6 +36,10 @@ class URLItem(BaseModel):
     url: str
     notes: Optional[str] = None
     token: str
+    
+class DELURLItem(BaseModel):
+    url: str
+    token: str
 
 
 @app.get("/")
@@ -55,9 +60,12 @@ def read_item(urlid: int, request: Request):
 
 @app.get("/urls")
 @limiter.limit("100/minute")
-def read_all(request: Request):
+def read_all(request: Request, hidden: Optional[bool] = False):
     try:
-        request = next(db.fetch({"show": True}))
+        if hidden == False:
+            request = next(db.fetch({"show": True}))
+        else:
+            request = next(db.fetch({"show": False}))
         return request
     except:
         raise HTTPException(status_code=404, detail="Items not found")
@@ -68,10 +76,12 @@ def read_all(request: Request):
 def add_item(url: URLItem, request: Request):
     if APP_TOKEN == url.token:
         rand = randint(10000, 99999)
+        today = str(date.today())
         db.insert({
             "id": rand,
             "url": url.url,
             "notes": url.notes,
+            "date": today,
             "show": False
         })
         return {"msg": "Success!",
@@ -86,17 +96,15 @@ def add_item(url: URLItem, request: Request):
 
 @app.delete("/delete")
 @limiter.limit("5/minute")
-def delete_item(url: str, token: str, request: Request):
+def delete_item(url: DELURLItem, request: Request):
     try:
-        if APP_TOKEN == token:
-            dburl = next(db.fetch({"url": url}))[0]
+        if APP_TOKEN == url.token:
+            dburl = next(db.fetch({"url": url.url}))[0]
             db.delete(dburl["key"])
             return {"msg": "Success!",
-                    "deleted_url": url,
+                    "deleted_url": url.url,
                     "deleted_key": dburl["key"]}
         else:
             raise HTTPException(status_code=401, detail="Unauthorized")
     except Exception as exception:
         return {"error": execption}
-        
-            
