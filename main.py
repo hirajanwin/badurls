@@ -88,14 +88,11 @@ def add_item(url: URLItem, request: Request):
 @limiter.limit("5/minute")
 def delete_item(url: str, token: str, request: Request):
     if APP_TOKEN == token:
-        try:
-            dburl = next(domains.fetch({"url": url}))[0]
-            domains.delete(dburl["key"])
-            return {"msg": "Success!",
+        dburl = next(domains.fetch({"url": url}))[0]
+        domains.delete(dburl["key"])
+        return {"msg": "Success!",
                     "deleted_url": url,
                     "deleted_key": dburl["key"]}
-        except:
-            raise HTTPException(status_code=404, detail="Item not found")
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
         
