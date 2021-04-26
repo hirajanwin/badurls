@@ -43,7 +43,7 @@ def read_root(request: Request):
     return {"msg": "API SERVED BY INTERNETSHERIFF.ORG - COPYRIGHT 2021"}
 
 
-@app.get("/api/url/{urlid}")
+@app.get("/url/{urlid}")
 @limiter.limit("100/minute")
 def read_item(urlid: int, request: Request):
     try:
@@ -53,7 +53,7 @@ def read_item(urlid: int, request: Request):
         raise HTTPException(status_code=404, detail="Item not found")
 
 
-@app.get("/api/urls")
+@app.get("/urls")
 @limiter.limit("100/minute")
 def read_all(request: Request):
     try:
@@ -63,7 +63,7 @@ def read_all(request: Request):
         raise HTTPException(status_code=404, detail="Items not found")
 
 
-@app.post("/api/add")
+@app.post("/add")
 @limiter.limit("10/minute")
 def add_item(url: URLItem, request: Request):
     if APP_TOKEN == url.token:
@@ -82,3 +82,21 @@ def add_item(url: URLItem, request: Request):
                 }
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
+    
+
+@app.delete("/delete")
+@limiter.limit("5/minute")
+def delete_item(url: str, token: str, request: Request):
+    if APP_TOKEN == token:
+        try:
+            dburl = next(domains.fetch({"url": url}))[0]
+            domains.delete(dburl["key"])
+            return {"msg": "Success!",
+                    "deleted_url": url,
+                    "deleted_key": dburl["key"]}
+        except:
+            raise HTTPException(status_code=404, detail="Item not found")
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+        
+            
