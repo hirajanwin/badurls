@@ -28,7 +28,7 @@ def read_root():
     return {"msg": "Hello World!"}
 
 
-@app.get("api/url/{urlid}")
+@app.get("/api/url/{urlid}")
 def read_item(urlid: int):
     try:
         request = next(db.fetch({"id": urlid}))[0]
@@ -37,7 +37,7 @@ def read_item(urlid: int):
         raise HTTPException(status_code=404, detail="Item not found")
 
 
-@app.get("api/urls")
+@app.get("/api/urls")
 def read_all():
     try:
         request = next(db.fetch({"show": True}))
@@ -46,7 +46,7 @@ def read_all():
         raise HTTPException(status_code=404, detail="Items not found")
 
 
-@app.post("api/add")
+@app.post("/api/add")
 def add_item(url: URLItem):
     if APP_TOKEN == url.token:
         rand = randint(10000, 99999)
