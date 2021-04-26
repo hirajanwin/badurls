@@ -102,20 +102,22 @@ def read_all(request: Request, hidden: Optional[bool] = False):
 @app.post("/add")
 @limiter.limit("10/minute")
 def add_item(url: URLItem, request: Request, username: str = Depends(get_current_username)):
-   rand = randint(10000, 99999)
-   today = str(date.today())
-   db.insert({
-       "id": rand,
-       "url": url.url,
-       "notes": url.notes,
-       "date": today,
-       "show": False})
-   return {"msg": "Success!",
-           "user": username,
-           "data": {
-           "id": rand,
-           "url": url.url,
-           "notes": url.notes}}
+    rand = randint(10000, 99999)
+    today = str(date.today())
+    db.insert({
+        "id": rand,
+		"url": url.url,
+		"notes": url.notes,
+		"date": today,
+		"show": False
+    })
+    return {"msg": "Success!",
+            "user": username,
+            "data": {
+			"id": rand,
+			"url": url.url,
+			"notes": url.notes}
+           }
     
 
 @app.delete("/delete")
@@ -123,10 +125,10 @@ def add_item(url: URLItem, request: Request, username: str = Depends(get_current
 def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_current_username)):
     try:
         dburl = next(db.fetch({"url": url.url}))[0]
-        db.delete(dburl["key"])
-        return {"msg": "Success!",
+		db.delete(dburl["key"])
+		return {"msg": "Success!",
                 "username": username,
                 "deleted_url": url.url,
-                 "deleted_key": dburl["key"]}
+                "deleted_key": dburl["key"]}
     except Exception as exception:
         return {"error": execption}
