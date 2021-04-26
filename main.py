@@ -1,6 +1,9 @@
 from typing import Optional
 from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from deta import Deta
 from random import randint
 from dotenv import load_dotenv
@@ -15,6 +18,9 @@ APP_TOKEN = os.getenv("APP_TOKEN")
 deta = Deta(DETA_TOKEN)  # configure your Deta project
 db = deta.Base("domains")  # access your DB
 app = FastAPI()
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 class URLItem(BaseModel):
@@ -24,12 +30,14 @@ class URLItem(BaseModel):
 
 
 @app.get("/")
-def read_root():
-    return {"msg": "Hello World!"}
+@limiter.limit("1000/minute")
+def read_root(request: Request):
+    return {"msg": "API SERVED BY INTERNETSHERIFF.ORG - COPYRIGHT 2021"}
 
 
 @app.get("/api/url/{urlid}")
-def read_item(urlid: int):
+@limiter.limit("100/minute")
+def read_item(urlid: int, request: Request):
     try:
         request = next(db.fetch({"id": urlid}))[0]
         return request
@@ -38,7 +46,8 @@ def read_item(urlid: int):
 
 
 @app.get("/api/urls")
-def read_all():
+@limiter.limit("100/minute")
+def read_all(request: Request):
     try:
         request = next(db.fetch({"show": True}))
         return request
@@ -47,7 +56,8 @@ def read_all():
 
 
 @app.post("/api/add")
-def add_item(url: URLItem):
+@limiter.limit("10/minute")
+def add_item(url: URLItem, request: Request):
     if APP_TOKEN == url.token:
         rand = randint(10000, 99999)
         db.insert({
