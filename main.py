@@ -16,7 +16,7 @@ from datetime import date
 # Load Sentry
 
 sentry_sdk.init(
-    "https://0b626e39891a4dab8a4f191cc88f3469@o309026.ingest.sentry.io/5599097",
+    dsn="https://0b626e39891a4dab8a4f191cc88f3469@o309026.ingest.sentry.io/5599097",
     traces_sample_rate=1.0
 )
 
