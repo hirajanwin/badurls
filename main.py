@@ -96,6 +96,7 @@ def add_item(url: URLItem, request: Request, username: str = Depends(get_current
             "show": False
         })
         return {"msg": "Success!",
+                "user": username,
                 "data": {
                     "id": rand,
                     "url": url.url,
@@ -113,6 +114,7 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
             dburl = next(db.fetch({"url": url.url}))[0]
             db.delete(dburl["key"])
             return {"msg": "Success!",
+                    "username": username,
                     "deleted_url": url.url,
                     "deleted_key": dburl["key"]}
         else:
