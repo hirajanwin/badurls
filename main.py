@@ -95,46 +95,38 @@ def read_all(request: Request, hidden: Optional[bool] = False):
         else:
             request = next(db.fetch({"show": False}))
         return request
-    except:
+    except:ö
         raise HTTPException(status_code=404, detail="Items not found")
 
 
 @app.post("/add")
 @limiter.limit("10/minute")
 def add_item(url: URLItem, request: Request, username: str = Depends(get_current_username)):
-    if APP_TOKEN == url.token:
-        rand = randint(10000, 99999)
-        today = str(date.today())
-        db.insert({
-            "id": rand,
-            "url": url.url,
-            "notes": url.notes,
-            "date": today,
-            "show": False
-        })
-        return {"msg": "Success!",
-                "user": username,
-                "data": {
-                    "id": rand,
-                    "url": url.url,
-                    "notes": url.notes}
-                }
-    else:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+   rand = randint(10000, 99999)
+   today = str(date.today())
+   db.insert({
+       "id": rand,
+       "url": url.url,
+       "notes": url.notes,
+       "date": today,
+       "show": False})
+   return {"msg": "Success!",
+           "user": username,
+           "data": {
+           "id": rand,
+           "url": url.url,
+           "notes": url.notes}}
     
 
 @app.delete("/delete")
 @limiter.limit("5/minute")
 def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_current_username)):
     try:
-        if APP_TOKEN == url.token:
-            dburl = next(db.fetch({"url": url.url}))[0]
-            db.delete(dburl["key"])
-            return {"msg": "Success!",
-                    "username": username,
-                    "deleted_url": url.url,
-                    "deleted_key": dburl["key"]}
-        else:
-            raise HTTPException(status_code=401, detail="Unauthorized")
+        dburl = next(db.fetch({"url": url.url}))[0]
+        db.delete(dburl["key"])
+        return {"msg": "Success!",
+                "username": username,
+                "deleted_url": url.url,
+                 "deleted_key": dburl["key"]}
     except Exception as exception:
         return {"error": execption}
