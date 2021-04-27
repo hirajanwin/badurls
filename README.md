@@ -12,6 +12,7 @@
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/berrysauce/badurls)
 ![GitHub repo size](https://img.shields.io/github/repo-size/berrysauce/badurls)
 ![Python version](https://img.shields.io/badge/python-3.9-blue)
+![Domain Total](https://img.shields.io/endpoint?url=https://badurls.api.internetsheriff.org/shields/total)
 
 # Bad URLs
 An API which checks, receives and reviews bad and unsafe URLs on the internet.
