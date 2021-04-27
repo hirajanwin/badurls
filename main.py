@@ -74,7 +74,9 @@ class DELURLItem(BaseModel):
 @app.get("/")
 @limiter.limit("1000/minute")
 def read_root(request: Request):
-    return {"msg": "API SERVED BY INTERNETSHERIFF.ORG - COPYRIGHT 2021"}
+    today = date.today()
+    year = str(today.year)
+    return {"msg": "API SERVED BY INTERNETSHERIFF.ORG - COPYRIGHT " + year}
 
 
 @app.get("/url/{urlid}")
