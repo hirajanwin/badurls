@@ -135,5 +135,20 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
                 "deleted_url": url.url,
                 "deleted_id": dburl["id"],
                 "deleted_key": dburl["key"]}
-    except Exception as exception:
+    except:
         raise HTTPException(status_code=404, detail="Item not found")
+    
+
+@app.get("/shields/{type}")
+@limiter.limit("100/minute")
+def shields(type: str, request: Request):
+    if type == "count":
+        domain_count = len(next(domains.fetch()))
+        return {
+            "schemaVersion": 1,
+            "label": "number of domains",
+            "message": domain_count,
+            "color": "blue"
+            }
+    else:
+        raise HTTPException(status_code=404, detail="Type not found")
