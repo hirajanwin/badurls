@@ -142,12 +142,12 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
 @app.get("/shields/{shield_type}")
 @limiter.limit("100/minute")
 def shields(shield_type: str, request: Request):
-    if shield_type == "count":
+    if shield_type == "total":
         domain_count = len(list(db.fetch(query=None))[0])
         return {
             "schemaVersion": 1,
-            "label": "number of domains",
-            "message": str(domain_count),
+            "label": "total",
+            "message": str(domain_count) + " domains",
             "color": "blue"
             }
     else:
