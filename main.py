@@ -135,4 +135,4 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
                 "deleted_url": url.url,
                 "deleted_key": dburl["key"]}
     except Exception as exception:
-        raise HTTPException(status_code=404, detail="Items not found")
+        raise HTTPException(status_code=404, detail="Item not found")
