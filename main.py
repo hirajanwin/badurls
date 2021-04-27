@@ -95,7 +95,7 @@ def read_all(request: Request, hidden: Optional[bool] = False):
         else:
             request = next(db.fetch({"show": False}))
         return request
-    except:ö
+    except:
         raise HTTPException(status_code=404, detail="Items not found")
 
 
@@ -106,18 +106,18 @@ def add_item(url: URLItem, request: Request, username: str = Depends(get_current
     today = str(date.today())
     db.insert({
         "id": rand,
-		"url": url.url,
-		"notes": url.notes,
-		"date": today,
-		"show": False
-    })
+        "url": url.url,
+        "notes": url.notes,
+        "date": today,
+        "show": False
+        })
     return {"msg": "Success!",
             "user": username,
             "data": {
-		    "id": rand,
-		    "url": url.url,
-		    "notes": url.notes}
-           }
+                "id": rand,
+                "url": url.url,
+                "notes": url.notes}
+            }
     
 
 @app.delete("/delete")
@@ -126,9 +126,9 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
     try:
         dburl = next(db.fetch({"url": url.url}))[0]
         db.delete(dburl["key"])
-	return {"msg": "Success!",
-		"username": username,
-		"deleted_url": url.url,
-		"deleted_key": dburl["key"]}
+        return {"msg": "Success!",
+                "username": username,
+                "deleted_url": url.url,
+                "deleted_key": dburl["key"]}
     except Exception as exception:
         return {"error": execption}
