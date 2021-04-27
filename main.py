@@ -141,8 +141,8 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
 
 @app.get("/shields/{type}")
 @limiter.limit("100/minute")
-def shields(type: str, request: Request):
-    if type == "count":
+def shields(shield_type: str, request: Request):
+    if shield_type == "count":
         domain_count = len(next(domains.fetch()))
         return {
             "schemaVersion": 1,
