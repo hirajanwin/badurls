@@ -139,7 +139,7 @@ def delete_item(url: DELURLItem, request: Request, username: str = Depends(get_c
         raise HTTPException(status_code=404, detail="Item not found")
     
 
-@app.get("/shields/{type}")
+@app.get("/shields/{shield_type}")
 @limiter.limit("100/minute")
 def shields(shield_type: str, request: Request):
     if shield_type == "count":
