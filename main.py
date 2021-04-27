@@ -147,7 +147,7 @@ def shields(shield_type: str, request: Request):
         return {
             "schemaVersion": 1,
             "label": "number of domains",
-            "message": domain_count,
+            "message": str(domain_count),
             "color": "blue"
             }
     else:
