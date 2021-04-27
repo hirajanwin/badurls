@@ -1,3 +1,16 @@
+```
+ _               _            _
+| |__   __ _  __| |_   _ _ __| |___
+| '_ \ / _` |/ _` | | | | '__| / __|
+| |_) | (_| | (_| | |_| | |  | \__ \
+|_.__/ \__,_|\__,_|\__,_|_|  |_|___/
+
+```
+
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/berrysauce/badurls)
+![GitHub last commit](https://img.shields.io/github/last-commit/berrysauce/badurls)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/berrysauce/badurls)
+
 # Bad URLs
 An API which checks, receives and reviews bad and unsafe URLs on the internet.
 
