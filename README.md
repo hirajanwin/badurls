@@ -10,7 +10,6 @@
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/berrysauce/badurls)
 ![GitHub last commit](https://img.shields.io/github/last-commit/berrysauce/badurls)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/berrysauce/badurls)
-![GitHub repo size](https://img.shields.io/github/repo-size/berrysauce/badurls)
 ![Python version](https://img.shields.io/badge/python-3.9-blue)
 ![Domain Total](https://img.shields.io/endpoint?url=https://badurls.api.internetsheriff.org/shields/total)
 [![DeepSource](https://deepsource.io/gh/berrysauce/badurls.svg/?label=active+issues)](https://deepsource.io/gh/berrysauce/badurls/?ref=repository-badge)
