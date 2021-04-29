@@ -152,5 +152,4 @@ def shields(shield_type: str, request: Request):
             "message": str(domain_count) + " domains",
             "color": "blue"
             }
-    else:
-        raise HTTPException(status_code=404, detail="Type not found")
+    raise HTTPException(status_code=404, detail="Type not found")
