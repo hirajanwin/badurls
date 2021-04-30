@@ -4,3 +4,4 @@ deta~=0.7
 python-dotenv~=0.15.0
 slowapi~=0.1.4
 sentry-sdk~=1.0.0
+uvicorn~=0.13.4
