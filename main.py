@@ -93,7 +93,7 @@ def read_item(urlid: int, request: Request):
 @limiter.limit("100/minute")
 def read_all(request: Request, hidden: Optional[bool] = False):
     try:
-        if hidden == False:
+        if hidden is False:
             request = next(db.fetch({"show": True}))
         else:
             request = next(db.fetch({"show": False}))
