@@ -12,6 +12,7 @@
 ![Python version](https://img.shields.io/badge/python-3.9-blue)
 ![Domain Total](https://img.shields.io/endpoint?url=https://badurls.api.internetsheriff.org/shields/total)
 [![DeepSource](https://deepsource.io/gh/berrysauce/badurls.svg/?label=active+issues)](https://deepsource.io/gh/berrysauce/badurls/?ref=repository-badge)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/77a4795a144842b4b507cadac9c03b22)](https://www.codacy.com/gh/berrysauce/badurls/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=berrysauce/badurls&amp;utm_campaign=Badge_Grade)
 
 # Bad URLs
 An API which checks, receives and reviews bad and unsafe URLs on the internet.
